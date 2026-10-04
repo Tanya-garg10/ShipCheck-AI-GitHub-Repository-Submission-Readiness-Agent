@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run backend tests after task",
+      "trigger": "PostTaskExec",
+      "description": "Run backend tests automatically after each spec task completes",
+      "action": {
+        "type": "command",
+        "command": "cd backend && npx vitest run --reporter=verbose 2>&1",
+        "timeout": 120
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Type-check on TypeScript save",
+      "trigger": "PostFileSave",
+      "description": "Run tsc --noEmit on the backend after any TypeScript file is saved to catch type errors early",
+      "matcher": "\\.(ts|tsx)$",
+      "action": {
+        "type": "command",
+        "command": "cd backend && npx tsc --noEmit 2>&1 | head -20 || true",
+        "timeout": 60
+      }
+    }
+  ]
+}
