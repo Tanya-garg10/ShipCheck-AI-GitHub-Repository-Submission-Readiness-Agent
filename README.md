@@ -4,15 +4,6 @@
 
 ShipCheck AI scans public GitHub repositories for documentation gaps, configuration issues, security risks, broken links, and hygiene problems — then generates an evidence-based readiness report with an actionable score and AI-powered recommendations.
 
----
-
-## Demo
-
-> **Live demo:** [ADD YOUR DEPLOYMENT URL]  
-> **Demo video:** [ADD YOUR VIDEO URL]
-
----
-
 ## What it checks
 
 | Category | Weight | What's evaluated |
@@ -25,8 +16,6 @@ ShipCheck AI scans public GitHub repositories for documentation gaps, configurat
 | License | 8 pts | LICENSE file, SPDX identifier recognition |
 
 **Scoring:** Each category starts at full weight. Every `critical` finding deducts 20 pts, `warning` −8 pts, `info` −2 pts from its category. Final score is 0–100 with grades A–F.
-
----
 
 ## Architecture
 
@@ -41,8 +30,6 @@ User → React Frontend (Vite)
 ```
 
 The AI layer explains and prioritizes findings from the rule engine — it never invents issues. When no OpenAI key is configured, a deterministic fallback still generates useful recommendations.
-
----
 
 ## Tech Stack
 
@@ -63,8 +50,6 @@ The AI layer explains and prioritizes findings from the rule engine — it never
 ### Dev tooling
 - Kiro AI IDE (Specs, Steering, Hooks)
 - npm workspaces
-
----
 
 ## Getting Started
 
@@ -134,8 +119,6 @@ npm run build
 
 Output: `backend/dist/` and `frontend/dist/`.
 
----
-
 ## API Reference
 
 ### `POST /api/analyze`
@@ -171,8 +154,6 @@ Returns a detailed AI-generated fix for a specific finding.
 
 Returns `{ "status": "ok" }`.
 
----
-
 ## Project Structure
 
 ```
@@ -207,9 +188,7 @@ Returns `{ "status": "ok" }`.
 └── package.json                 # Root workspace
 ```
 
----
-
-## How we used Kiro
+## How I used Kiro
 
 This project was built entirely inside [Kiro AI IDE](https://kiro.dev).
 
@@ -218,23 +197,17 @@ This project was built entirely inside [Kiro AI IDE](https://kiro.dev).
 - **Kiro Hooks** — Automated `tsc --noEmit` type-checking after every TypeScript file save, and ran the Vitest test suite after each completed spec task.
 - **Kiro Autopilot** — Used throughout to scaffold, implement, debug, and verify the full stack end-to-end.
 
----
-
 ## Security notes
 
 - ShipCheck AI only analyzes **public** repositories. Private repo requests are rejected with HTTP 422.
 - Secret detection is a best-effort surface scan using regex patterns. It is not a substitute for dedicated tools like `gitleaks` or `truffleHog`.
 - No full file contents are sent to OpenAI — only finding summaries and repository metadata.
 
----
-
 ## Builder
 
 - **Name:** Tanya Garg
 - **Track:** Developer Tools / AI & Productivity
 - **Challenge:** [Kiro Build Challenge](https://awssbggeu.com/challenges/kiro-build-challenge) — AWS Student Builder Group GEU × AWS Student Builder Group PIET
-
----
 
 ## License
 
