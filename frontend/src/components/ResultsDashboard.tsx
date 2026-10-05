@@ -24,7 +24,7 @@ export function ResultsDashboard({ report, previousReport, onReset, onRescan, is
   return (
     <div className="space-y-5 animate-slide-up max-w-5xl mx-auto px-4">
       {/* Top bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass-card px-4 py-3 rounded-xl">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass-card px-4 py-3 rounded-xl relative">
         <div className="flex items-center gap-3 flex-wrap">
           <h2 className="text-sm text-slate-400">
             Results for{' '}
@@ -70,12 +70,14 @@ export function ResultsDashboard({ report, previousReport, onReset, onRescan, is
       </div>
 
       {/* Score */}
-      <ScoreCard
-        score={report.score}
-        durationMs={report.checkDurationMs}
-        repoName={report.metadata.fullName}
-        branch={report.metadata.defaultBranch}
-      />
+      <div id="score">
+        <ScoreCard
+          score={report.score}
+          durationMs={report.checkDurationMs}
+          repoName={report.metadata.fullName}
+          branch={report.metadata.defaultBranch}
+        />
+      </div>
 
       {/* Score improvement comparison */}
       {previousReport && scoreImprovement !== 0 && (
@@ -94,17 +96,21 @@ export function ResultsDashboard({ report, previousReport, onReset, onRescan, is
 
       {/* AI Recommendations */}
       {report.aiRecommendations && (
-        <AIRecommendationsPanel recommendations={report.aiRecommendations} />
+        <div id="recommendations">
+          <AIRecommendationsPanel recommendations={report.aiRecommendations} />
+        </div>
       )}
 
       {/* Submission Summary */}
-      <SubmissionSummary report={report} />
+      <div id="summary">
+        <SubmissionSummary report={report} />
+      </div>
 
       {/* Mission Control Fix Queue */}
       <MissionControlFixQueue findings={report.findings} />
 
       {/* Findings */}
-      <div className="rounded-2xl glass-card p-5 premium-shadow">
+      <div id="findings" className="rounded-2xl glass-card p-5 premium-shadow">
         <h2 className="text-sm font-semibold text-white mb-4">
           Findings{' '}
           <span className="text-slate-500 font-normal">({report.findings.length})</span>

@@ -30,11 +30,11 @@ fixSuggestionRouter.post('/', async (req: Request, res: Response) => {
 
   // ── Check that AI key is configured ────────────────────────────────────────
 
-  if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.FEATHERLESS_API_KEY) {
     return res.status(503).json({
       success: false,
       error:
-        'AI fix suggestions require an OpenAI API key. Set OPENAI_API_KEY in the backend .env file.',
+        'AI fix suggestions require a Featherless AI API key. Set FEATHERLESS_API_KEY in the backend .env file.',
     } as FixSuggestionResponse);
   }
 
@@ -57,9 +57,12 @@ fixSuggestionRouter.post('/', async (req: Request, res: Response) => {
     const suggestion = await generateFixSuggestion({ repoUrl, findingId, context }, findings);
 
     if (!suggestion) {
-      return res.status(500).json({
-        success: false,
-        error: 'AI fix suggestion generation failed. Please try again.',
+      // Fallback: return the finding's suggestion as the fix
+      const fallbackSuggestion = `**Issue:** ${finding.title}\n\n**Description:** ${finding.description}\n\n**Suggested Fix:** ${finding.suggestion || 'See the finding description for guidance.'}\n\n**Note:** AI-generated fix suggestions are currently unavailable. Please use the finding suggestion above.`;
+
+      return res.status(200).json({
+        success: true,
+        suggestion: fallbackSuggestion,
       } as FixSuggestionResponse);
     }
 

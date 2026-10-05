@@ -1,4 +1,8 @@
-export function Hero() {
+interface HeroProps {
+  onDemo?: () => void;
+}
+
+export function Hero({ onDemo }: HeroProps) {
   return (
     <div className="text-center py-12 sm:py-16 relative">
       {/* Status indicator */}
@@ -16,6 +20,19 @@ export function Hero() {
       <p className="text-sm text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed px-4">
         Inspect your repository. Find what reviewers will notice. Fix it before they do.
       </p>
+
+      {/* Demo CTA Button */}
+      {onDemo && (
+        <div className="mb-8 px-4">
+          <button
+            onClick={onDemo}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-300 hover:border-purple-400 hover:text-purple-200 transition-all duration-200 text-sm font-medium"
+          >
+            <span>🎯</span>
+            <span>Try Demo Analysis</span>
+          </button>
+        </div>
+      )}
 
       {/* Capability labels */}
       <div className="flex flex-wrap justify-center gap-3 text-label text-slate-500 mb-8 px-4">

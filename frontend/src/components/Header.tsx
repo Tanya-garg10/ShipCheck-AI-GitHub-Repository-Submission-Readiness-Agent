@@ -1,6 +1,10 @@
 import { Github } from 'lucide-react';
 
-export function Header() {
+interface HeaderProps {
+  showNav?: boolean;
+}
+
+export function Header({ showNav = false }: HeaderProps) {
   return (
     <header className="border-b border-slate-800 glass-card sticky top-0 z-10">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -13,39 +17,37 @@ export function Header() {
           </div>
         </div>
         <nav className="hidden md:flex items-center gap-6">
-          <a
-            href="#"
-            className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
-          >
-            Scan
-          </a>
-          <a
-            href="#"
-            className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
-          >
-            Findings
-          </a>
-          <a
-            href="#"
-            className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
-          >
-            Evidence
-          </a>
-          <a
-            href="#"
-            className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
-          >
-            Fix Plan
-          </a>
-          <a
-            href="#"
-            className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
-          >
-            History
-          </a>
+          {showNav ? (
+            <>
+              <a
+                href="#score"
+                className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
+              >
+                Score
+              </a>
+              <a
+                href="#findings"
+                className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
+              >
+                Findings
+              </a>
+              <a
+                href="#recommendations"
+                className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
+              >
+                Recommendations
+              </a>
+              <a
+                href="#summary"
+                className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
+              >
+                Summary
+              </a>
+            </>
+          ) : null}
           <div className="w-px h-4 bg-slate-700" />
           <a
-            href="https://github.com"
+            href="https://github.com/kiro-build-challenge/ShipCheck-AI"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-800/50"

@@ -11,7 +11,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
 // ─── Middleware ───────────────────────────────────────────────────────────────
 
 app.use(cors({
-  origin: [FRONTEND_URL, 'http://localhost:5173', 'http://localhost:4173'],
+  origin: [FRONTEND_URL, 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:4173', 'http://localhost:4174'],
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type'],
 }));
@@ -33,15 +33,16 @@ app.get('/api/health', (_req, res) => {
 
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error('[ShipCheck] Unhandled error:', err.message);
-  res.status(500).json({ success: false, error: 'Internal server error' });
+  console.error('[ShipCheck] Stack trace:', err.stack);
+  res.status(500).json({ success: false, error: `Internal server error: ${err.message}` });
 });
 
 // ─── Start ────────────────────────────────────────────────────────────────────
 
 app.listen(PORT, () => {
   console.log(`[ShipCheck] Backend running on http://localhost:${PORT}`);
-  console.log(`[ShipCheck] GitHub token: ${process.env.GITHUB_TOKEN ? 'configured' : 'not set (60 req/hr limit)'}`);
-  console.log(`[ShipCheck] OpenAI key:   ${process.env.OPENAI_API_KEY ? 'configured' : 'not set (AI disabled)'}`);
+  console.log(`[ShipCheck] GitHub token:     ${process.env.GITHUB_TOKEN ? 'configured' : 'not set (60 req/hr limit)'}`);
+  console.log(`[ShipCheck] Featherless key: ${process.env.FEATHERLESS_API_KEY ? 'configured' : 'not set (AI disabled)'}`);
 });
 
 export default app;

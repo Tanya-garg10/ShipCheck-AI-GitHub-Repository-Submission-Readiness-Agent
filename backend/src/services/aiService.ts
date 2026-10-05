@@ -164,6 +164,8 @@ Provide a detailed, actionable fix for this specific issue. Include:
 3. How to verify the fix worked`;
 
   try {
+    console.log('[AIService] Calling Featherless API with model:', MODEL);
+    console.log('[AIService] Base URL:', process.env.FEATHERLESS_BASE_URL);
     const response = await client.chat.completions.create({
       model: MODEL,
       messages: [
@@ -177,6 +179,7 @@ Provide a detailed, actionable fix for this specific issue. Include:
     return response.choices[0]?.message?.content ?? null;
   } catch (err) {
     console.error('[AIService] generateFixSuggestion error:', (err as Error).message);
+    console.error('[AIService] Full error:', JSON.stringify(err, null, 2));
     return null;
   }
 }

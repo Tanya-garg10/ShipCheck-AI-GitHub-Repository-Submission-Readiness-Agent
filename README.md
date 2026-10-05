@@ -116,7 +116,7 @@ graph TB
     Backend --> Engine[Deterministic Rule Engine]
     Engine --> Checkers[6 Checker Modules]
     Engine --> Scorer[Scoring Engine]
-    Backend --> AI[AI Layer - OpenAI]
+    Backend --> AI[AI Layer - Featherless AI]
     Backend --> Response[ReadinessReport]
     Response --> Frontend
     Frontend --> User
@@ -129,7 +129,7 @@ graph TB
     Checkers --> License[License Checker]
 ```
 
-The AI layer explains and prioritizes findings from the rule engine — it never invents issues. When no OpenAI key is configured, a deterministic fallback still generates useful recommendations.
+The AI layer explains and prioritizes findings from the rule engine — it never invents issues. When no Featherless AI key is configured, a deterministic fallback still generates useful recommendations.
 
 ## Tech Stack
 
@@ -229,6 +229,16 @@ npm run build
 ```
 
 Output: `backend/dist/` and `frontend/dist/`.
+
+## Deployment
+
+For detailed deployment instructions, see [deployment.md](deployment.md).
+
+Quick options:
+- **Render** — All-in-one platform (easiest)
+- **Vercel + Railway** — Separate frontend/backend hosting
+- **Docker** — Containerized deployment
+- **VPS** — Manual server deployment
 
 ## API Reference
 

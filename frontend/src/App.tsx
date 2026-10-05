@@ -97,14 +97,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative z-10 overflow-hidden">
-      <Header />
+    <div className="min-h-screen flex flex-col relative z-10 overflow-x-hidden">
+      <Header showNav={state === 'results'} />
 
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 pb-16">
         {/* Landing page sections - shown when not analyzing */}
         {state === 'idle' && (
           <>
-            <Hero />
+            <Hero onDemo={handleDemo} />
 
             <SamplePreview />
 
@@ -126,7 +126,7 @@ export default function App() {
         {/* Show input during error state */}
         {state === 'error' && (
           <>
-            <Hero />
+            <Hero onDemo={handleDemo} />
             {error && <ErrorState error={error} onRetry={() => setState('idle')} />}
             <div className="flex justify-center mt-8">
               <UrlInput

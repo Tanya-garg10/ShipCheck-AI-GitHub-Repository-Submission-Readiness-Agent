@@ -32,8 +32,10 @@ analyzeRouter.post('/', async (req: Request, res: Response) => {
   // ── Run analysis ────────────────────────────────────────────────────────────
 
   try {
+    console.log('[/analyze] Starting analysis for:', repoUrl);
     const github = getGitHubService();
     const ctx = await github.buildRepoContext(repoUrl);
+    console.log('[/analyze] Repository context built successfully');
 
     // Block analysis of private repos (we can't access their content anyway,
     // but surface a clear error rather than a cryptic 404)
@@ -50,11 +52,16 @@ analyzeRouter.post('/', async (req: Request, res: Response) => {
       repoUrl,
       includeAI: Boolean(includeAI),
     });
+    console.log('[/analyze] Report assembled successfully');
 
     const response: AnalyzeResponse = { success: true, report };
     return res.status(200).json(response);
   } catch (err: unknown) {
     const message = (err as Error).message ?? 'Unknown error';
+    const stack = (err as Error).stack ?? 'No stack trace';
+
+    console.error('[/analyze] Error occurred:', message);
+    console.error('[/analyze] Stack trace:', stack);
 
     // Map GitHub API errors to useful HTTP status codes
     if (message.includes('404') || message.toLowerCase().includes('not found')) {

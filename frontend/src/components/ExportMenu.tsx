@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Download, FileJson, FileText, Printer } from 'lucide-react';
 import { ReadinessReport } from '../types';
 
@@ -8,6 +9,18 @@ interface ExportMenuProps {
 
 export function ExportMenu({ report }: ExportMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
+
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY + 8,
+        right: window.innerWidth - rect.right,
+      });
+    }
+  }, [isOpen]);
 
   function exportAsJSON() {
     const data = {
@@ -75,48 +88,58 @@ export function ExportMenu({ report }: ExportMenuProps) {
   }
 
   return (
-    <div className="relative">
+    <>
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 text-xs text-slate-400 hover:text-slate-200 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-800/50"
         aria-label="Export options"
+        aria-expanded={isOpen}
       >
         <Download className="w-4 h-4" />
         Export
       </button>
 
-      {isOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setIsOpen(false)}
-          />
-          <div className="absolute right-0 top-full mt-2 w-48 glass-card rounded-xl shadow-xl z-20 overflow-hidden">
-            <button
-              onClick={exportAsJSON}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800/50 transition-colors"
+      {isOpen &&
+        createPortal(
+          <>
+            <div
+              className="fixed inset-0 z-[9999]"
+              onClick={() => setIsOpen(false)}
+            />
+            <div
+              className="fixed w-48 glass-card rounded-xl shadow-xl z-[10000] overflow-hidden"
+              style={{
+                top: `${dropdownPosition.top}px`,
+                right: `${dropdownPosition.right}px`,
+              }}
             >
-              <FileJson className="w-4 h-4" />
-              Export as JSON
-            </button>
-            <button
-              onClick={exportAsMarkdown}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800/50 transition-colors"
-            >
-              <FileText className="w-4 h-4" />
-              Export as Markdown
-            </button>
-            <button
-              onClick={printReport}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800/50 transition-colors"
-            >
-              <Printer className="w-4 h-4" />
-              Print Report
-            </button>
-          </div>
-        </>
-      )}
-    </div>
+              <button
+                onClick={exportAsJSON}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800/50 transition-colors"
+              >
+                <FileJson className="w-4 h-4" />
+                Export as JSON
+              </button>
+              <button
+                onClick={exportAsMarkdown}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800/50 transition-colors"
+              >
+                <FileText className="w-4 h-4" />
+                Export as Markdown
+              </button>
+              <button
+                onClick={printReport}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800/50 transition-colors"
+              >
+                <Printer className="w-4 h-4" />
+                Print Report
+              </button>
+            </div>
+          </>,
+          document.body
+        )}
+    </>
   );
 }
 
