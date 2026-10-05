@@ -142,7 +142,7 @@ The AI layer explains and prioritizes findings from the rule engine — it never
 ### Backend
 - Node.js + Express + TypeScript
 - Axios (GitHub API client)
-- OpenAI SDK (gpt-4o-mini)
+- OpenAI SDK (compatible with Featherless AI)
 - Zod (validation)
 
 ### Testing
@@ -162,7 +162,7 @@ The AI layer explains and prioritizes findings from the rule engine — it never
 - npm 9+
 - A public GitHub repository URL to analyze
 - (Optional) GitHub Personal Access Token — increases API rate limit from 60 to 5,000 req/hr
-- (Optional) OpenAI API key — enables AI recommendations
+- (Optional) Featherless AI API key — enables AI recommendations
 
 ### Installation
 
@@ -189,7 +189,11 @@ Open `backend/.env` and fill in:
 GITHUB_TOKEN=ghp_your_token_here
 
 # Optional — enables AI recommendations
-OPENAI_API_KEY=sk-your_key_here
+FEATHERLESS_API_KEY=your_featherless_api_key_here
+
+# Optional — custom Featherless AI configuration
+FEATHERLESS_BASE_URL=https://api.featherless.ai/v1
+FEATHERLESS_MODEL=meta-llama/Llama-3.3-70B-Instruct
 
 # Defaults shown
 PORT=3001
@@ -255,7 +259,7 @@ Returns a detailed AI-generated fix for a specific finding.
 }
 ```
 
-**Requires** `OPENAI_API_KEY` to be set.
+**Requires** `FEATHERLESS_API_KEY` to be set.
 
 ### `GET /api/health`
 
@@ -312,7 +316,7 @@ This project was built entirely inside [Kiro AI IDE](https://kiro.dev).
 
 - ShipCheck AI only analyzes **public** repositories. Private repo requests are rejected with HTTP 422.
 - Secret detection is a best-effort surface scan using regex patterns. It is not a substitute for dedicated tools like `gitleaks` or `truffleHog`.
-- No full file contents are sent to OpenAI — only finding summaries and repository metadata.
+- No full file contents are sent to Featherless AI — only finding summaries and repository metadata.
 - Secret values are always redacted in reports.
 - No arbitrary repository code is executed automatically.
 - This is not a full security audit — it's a submission-readiness check.
@@ -326,7 +330,7 @@ This project was built entirely inside [Kiro AI IDE](https://kiro.dev).
 - Only public GitHub repositories are supported
 - Link checking has timeouts and may not verify all URLs
 - Secret detection is pattern-based and may have false positives/negatives
-- AI recommendations are based on available evidence and may not cover all edge cases
+- AI recommendations from Featherless AI are based on available evidence and may not cover all edge cases
 - Build/test checks inspect configuration but do not execute arbitrary code
 
 ---
