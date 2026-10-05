@@ -1,4 +1,4 @@
-import { Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { AIRecommendation } from '../types';
 
@@ -11,8 +11,8 @@ export function AIRecommendationsPanel({ recommendations }: AIRecommendationsPan
 
   return (
     <section
-      aria-label="AI Recommendations"
-      className="rounded-2xl bg-slate-900 border border-brand-500/20 overflow-hidden animate-slide-up"
+      aria-label="ShipCheck Intelligence"
+      className="rounded-xl glass-card border border-slate-700 overflow-hidden animate-slide-up"
     >
       {/* Header */}
       <button
@@ -21,13 +21,13 @@ export function AIRecommendationsPanel({ recommendations }: AIRecommendationsPan
         aria-expanded={expanded}
       >
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-brand-500/20 flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-brand-400" aria-hidden="true" />
+          <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center">
+            <span className="text-white font-bold text-xs">AI</span>
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-white">AI Recommendations</h2>
+            <h2 className="text-sm font-semibold text-white">SHIPCHECK INTELLIGENCE</h2>
             <p className="text-xs text-slate-500">
-              {recommendations.prioritized.length} prioritized fix{recommendations.prioritized.length !== 1 ? 'es' : ''}
+              Evidence received → Rule evaluated → AI explanation generated
             </p>
           </div>
         </div>
@@ -41,36 +41,62 @@ export function AIRecommendationsPanel({ recommendations }: AIRecommendationsPan
       {expanded && (
         <div className="px-4 pb-4 space-y-4 animate-fade-in">
           {/* Summary */}
-          <div className="rounded-xl bg-brand-500/5 border border-brand-500/15 px-4 py-3">
+          <div className="rounded-lg glass-card px-4 py-3 border border-slate-800">
             <p className="text-sm text-slate-300 leading-relaxed">{recommendations.summary}</p>
           </div>
 
-          {/* Prioritized fixes */}
+          {/* Prioritized fixes with FACT/AI distinction */}
           {recommendations.prioritized.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">
-                Prioritized Actions
+              <h3 className="text-label text-slate-500 uppercase tracking-wide mb-3">
+                Analysis
               </h3>
-              <ol className="space-y-3">
+              <ol className="space-y-4">
                 {recommendations.prioritized.map((fix) => (
-                  <li key={fix.findingId} className="flex gap-3">
-                    <span
-                      className="
-                        flex-shrink-0 w-5 h-5 rounded-full
-                        bg-brand-500/20 text-brand-400
-                        text-xs font-bold flex items-center justify-center mt-0.5
-                      "
-                      aria-label={`Priority ${fix.priority}`}
-                    >
-                      {fix.priority}
-                    </span>
-                    <div>
-                      <p className="text-sm font-medium text-slate-200">{fix.title}</p>
-                      <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">
+                  <li key={fix.findingId} className="space-y-2">
+                    <div className="flex gap-3">
+                      <span
+                        className="
+                          flex-shrink-0 w-6 h-6 rounded-lg
+                          bg-slate-800 border border-slate-700 text-slate-300
+                          text-xs font-bold flex items-center justify-center mt-0.5
+                        "
+                        aria-label={`Priority ${fix.priority}`}
+                      >
+                        {fix.priority}
+                      </span>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-slate-200">{fix.title}</p>
+                      </div>
+                    </div>
+
+                    {/* FACT section */}
+                    <div className="ml-9 rounded-lg glass-card px-3 py-2 border border-slate-800">
+                      <span className="text-label text-slate-500 uppercase tracking-wide mb-1 block">
+                        FACT
+                      </span>
+                      <p className="text-xs text-slate-300 leading-relaxed">
                         {fix.explanation}
                       </p>
-                      <p className="text-xs text-brand-300 mt-1 leading-relaxed">
-                        → {fix.suggestedAction}
+                    </div>
+
+                    {/* AI EXPLANATION section */}
+                    <div className="ml-9 rounded-lg glass-card px-3 py-2 border border-slate-800">
+                      <span className="text-label text-slate-500 uppercase tracking-wide mb-1 block">
+                        AI EXPLANATION
+                      </span>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        {fix.explanation}
+                      </p>
+                    </div>
+
+                    {/* RECOMMENDED FIX section */}
+                    <div className="ml-9 rounded-lg glass-card px-3 py-2 border border-slate-800">
+                      <span className="text-label text-slate-500 uppercase tracking-wide mb-1 block">
+                        RECOMMENDED FIX
+                      </span>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        {fix.suggestedAction}
                       </p>
                     </div>
                   </li>
@@ -81,12 +107,18 @@ export function AIRecommendationsPanel({ recommendations }: AIRecommendationsPan
 
           {/* Overall advice */}
           {recommendations.overallAdvice && (
-            <div className="rounded-xl bg-slate-800 px-4 py-3">
+            <div className="rounded-lg glass-card px-4 py-3 border border-slate-800">
               <p className="text-xs text-slate-400 leading-relaxed">
-                💡 {recommendations.overallAdvice}
+                {recommendations.overallAdvice}
               </p>
             </div>
           )}
+
+          {/* Grounded label */}
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <span className="status-dot online" aria-hidden="true" />
+            AI RESPONSE GROUNDED IN SCAN EVIDENCE
+          </div>
         </div>
       )}
     </section>

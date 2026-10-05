@@ -16,29 +16,29 @@ const SEVERITY_CONFIG = {
     icon: XCircle,
     color: 'text-red-400',
     bg: 'bg-red-500/5 border-red-500/20',
-    badge: 'bg-red-500/20 text-red-300',
-    label: 'Critical',
+    badge: 'bg-red-500/20 text-red-300 border-red-500/30',
+    label: 'HIGH',
   },
   warning: {
     icon: AlertTriangle,
     color: 'text-yellow-400',
     bg: 'bg-yellow-500/5 border-yellow-500/20',
-    badge: 'bg-yellow-500/20 text-yellow-300',
-    label: 'Warning',
+    badge: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+    label: 'MEDIUM',
   },
   info: {
     icon: Info,
     color: 'text-blue-400',
     bg: 'bg-blue-500/5 border-blue-500/20',
-    badge: 'bg-blue-500/20 text-blue-300',
-    label: 'Info',
+    badge: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    label: 'LOW',
   },
   pass: {
     icon: CheckCircle2,
     color: 'text-emerald-400',
     bg: 'bg-emerald-500/5 border-emerald-500/20',
-    badge: 'bg-emerald-500/20 text-emerald-300',
-    label: 'Pass',
+    badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    label: 'PASS',
   },
 };
 
@@ -83,21 +83,21 @@ export function FindingItem({ finding, repoUrl }: FindingItemProps) {
   }
 
   return (
-    <div className={`rounded-xl border p-4 ${cfg.bg} animate-fade-in`}>
+    <div className={`rounded-lg border p-4 ${cfg.bg} animate-fade-in glass-card`}>
       <div className="flex items-start gap-3">
         <Icon
           className={`w-4 h-4 mt-0.5 flex-shrink-0 ${cfg.color}`}
           aria-hidden="true"
         />
         <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2 flex-wrap">
+          <div className="flex items-start justify-between gap-2 flex-wrap mb-2">
             <div className="flex items-center gap-2 flex-wrap">
               <span
-                className={`text-xs px-2 py-0.5 rounded-full font-medium ${cfg.badge}`}
+                className={`text-xs px-2 py-0.5 rounded font-medium ${cfg.badge} glass-card`}
               >
                 {cfg.label}
               </span>
-              <span className="text-xs text-slate-500 capitalize">
+              <span className="text-label text-slate-500 uppercase">
                 {finding.category.replace('_', ' ')}
               </span>
             </div>
@@ -107,10 +107,10 @@ export function FindingItem({ finding, repoUrl }: FindingItemProps) {
                   onClick={handleGetFix}
                   disabled={fixLoading}
                   className="
-                    flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg
-                    border border-brand-500/40 text-brand-400
-                    hover:bg-brand-500/10 disabled:opacity-50
-                    transition-colors
+                    flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg
+                    glass-card text-slate-300
+                    hover:border-slate-500 disabled:opacity-50
+                    transition-all duration-200
                   "
                   aria-label={`Get AI fix for: ${finding.title}`}
                 >
@@ -137,29 +137,29 @@ export function FindingItem({ finding, repoUrl }: FindingItemProps) {
             </div>
           </div>
 
-          <p className="mt-1 text-sm font-medium text-slate-200">{finding.title}</p>
+          <p className="text-sm text-slate-200">{finding.title}</p>
 
           {expanded && (
-            <div className="mt-2 space-y-2 animate-fade-in">
+            <div className="mt-3 space-y-3 animate-fade-in">
               <p className="text-sm text-slate-400">{finding.description}</p>
 
               {finding.evidence && (
-                <div className="rounded-lg bg-slate-950/60 px-3 py-2">
-                  <span className="text-xs text-slate-500 font-medium uppercase tracking-wide">
+                <div className="rounded-lg glass-card px-3 py-2 border border-slate-800">
+                  <span className="text-label text-slate-500 uppercase tracking-wide">
                     Evidence
                   </span>
-                  <p className="text-xs text-slate-300 mt-0.5 font-mono break-all">
+                  <p className="text-xs text-slate-300 mt-1 text-mono break-all">
                     {finding.evidence}
                   </p>
                 </div>
               )}
 
               {finding.suggestion && (
-                <div className="rounded-lg bg-slate-950/60 px-3 py-2">
-                  <span className="text-xs text-slate-500 font-medium uppercase tracking-wide">
-                    Quick fix
+                <div className="rounded-lg glass-card px-3 py-2 border border-slate-800">
+                  <span className="text-label text-slate-500 uppercase tracking-wide">
+                    Recommended action
                   </span>
-                  <p className="text-xs text-slate-300 mt-0.5">{finding.suggestion}</p>
+                  <p className="text-xs text-slate-300 mt-1">{finding.suggestion}</p>
                 </div>
               )}
 
@@ -168,10 +168,10 @@ export function FindingItem({ finding, repoUrl }: FindingItemProps) {
               )}
 
               {fixText && (
-                <div className="rounded-lg bg-slate-950/80 border border-slate-700 overflow-hidden">
+                <div className="rounded-lg glass-card border border-slate-700 overflow-hidden">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-slate-700">
                     <span className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
-                      <Wand2 className="w-3 h-3 text-brand-400" aria-hidden="true" />
+                      <Wand2 className="w-3 h-3 text-slate-300" aria-hidden="true" />
                       AI Fix Suggestion
                     </span>
                     <button
@@ -186,7 +186,7 @@ export function FindingItem({ finding, repoUrl }: FindingItemProps) {
                       )}
                     </button>
                   </div>
-                  <div className="px-3 py-3 text-xs text-slate-300 whitespace-pre-wrap font-mono leading-relaxed max-h-64 overflow-y-auto scrollbar-thin">
+                  <div className="px-3 py-3 text-xs text-slate-300 whitespace-pre-wrap text-mono leading-relaxed max-h-64 overflow-y-auto scrollbar-thin">
                     {fixText}
                   </div>
                 </div>

@@ -1,54 +1,110 @@
 import { ReadinessReport } from '../types';
 import { ScoreCard } from './ScoreCard';
-import { RepoMetaCard } from './RepoMetaCard';
 import { FindingsList } from './FindingsList';
 import { AIRecommendationsPanel } from './AIRecommendationsPanel';
-import { RotateCcw } from 'lucide-react';
+import { ExportMenu } from './ExportMenu';
+import { SubmissionSummary } from './SubmissionSummary';
+import { MissionControlFixQueue } from './MissionControlFixQueue';
+import { RescanComparison } from './RescanComparison';
+import { RotateCcw, TrendingUp } from 'lucide-react';
 
 interface ResultsDashboardProps {
   report: ReadinessReport;
+  previousReport?: ReadinessReport;
   onReset: () => void;
+  onRescan: () => void;
+  isDemo?: boolean;
 }
 
-export function ResultsDashboard({ report, onReset }: ResultsDashboardProps) {
+export function ResultsDashboard({ report, previousReport, onReset, onRescan, isDemo = false }: ResultsDashboardProps) {
+  const scoreImprovement = previousReport
+    ? report.score.total - previousReport.score.total
+    : 0;
+
   return (
-    <div className="space-y-4 animate-slide-up">
+    <div className="space-y-5 animate-slide-up max-w-5xl mx-auto px-4">
       {/* Top bar */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-sm text-slate-400">
-          Results for{' '}
-          <a
-            href={`https://github.com/${report.metadata.fullName}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-brand-400 hover:underline"
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass-card px-4 py-3 rounded-xl">
+        <div className="flex items-center gap-3 flex-wrap">
+          <h2 className="text-sm text-slate-400">
+            Results for{' '}
+            <a
+              href={`https://github.com/${report.metadata.fullName}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-400 hover:underline"
+            >
+              {report.metadata.fullName}
+            </a>
+          </h2>
+          {isDemo && (
+            <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+              Demo
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          {previousReport && scoreImprovement !== 0 && (
+            <div className="flex items-center gap-1.5 text-xs px-2 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+              <TrendingUp className="w-3.5 h-3.5" />
+              <span>{scoreImprovement > 0 ? '+' : ''}{scoreImprovement} improvement</span>
+            </div>
+          )}
+          <button
+            onClick={onRescan}
+            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-800/50"
+            aria-label="Run scan again"
           >
-            {report.metadata.fullName}
-          </a>
-        </h2>
-        <button
-          onClick={onReset}
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
-          aria-label="Analyze another repository"
-        >
-          <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-          Analyze another
-        </button>
+            <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
+            Run Scan Again
+          </button>
+          <ExportMenu report={report} />
+          <button
+            onClick={onReset}
+            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-800/50"
+            aria-label="Analyze another repository"
+          >
+            Analyze another
+          </button>
+        </div>
       </div>
 
-      {/* Repository metadata */}
-      <RepoMetaCard metadata={report.metadata} />
-
       {/* Score */}
-      <ScoreCard score={report.score} durationMs={report.checkDurationMs} />
+      <ScoreCard
+        score={report.score}
+        durationMs={report.checkDurationMs}
+        repoName={report.metadata.fullName}
+        branch={report.metadata.defaultBranch}
+      />
+
+      {/* Score improvement comparison */}
+      {previousReport && scoreImprovement !== 0 && (
+        <>
+          <RescanComparison previousReport={previousReport} currentReport={report} />
+          <div className="flex justify-center">
+            <button
+              onClick={onRescan}
+              className="flex items-center gap-2 px-6 py-3 rounded-lg btn-primary font-medium"
+            >
+              RUN ANOTHER SHIP CHECK →
+            </button>
+          </div>
+        </>
+      )}
 
       {/* AI Recommendations */}
       {report.aiRecommendations && (
         <AIRecommendationsPanel recommendations={report.aiRecommendations} />
       )}
 
+      {/* Submission Summary */}
+      <SubmissionSummary report={report} />
+
+      {/* Mission Control Fix Queue */}
+      <MissionControlFixQueue findings={report.findings} />
+
       {/* Findings */}
-      <div className="rounded-2xl bg-slate-900 border border-slate-800 p-4">
+      <div className="rounded-2xl glass-card p-5 premium-shadow">
         <h2 className="text-sm font-semibold text-white mb-4">
           Findings{' '}
           <span className="text-slate-500 font-normal">({report.findings.length})</span>

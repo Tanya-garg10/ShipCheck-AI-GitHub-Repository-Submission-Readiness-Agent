@@ -1,43 +1,132 @@
 # ShipCheck AI 🚀
 
-> AI-assisted GitHub repository submission-readiness analyzer — built for the [Kiro Build Challenge](https://awssbggeu.com/challenges/kiro-build-challenge)
+> Your final reviewer before you hit Submit.
 
-ShipCheck AI scans public GitHub repositories for documentation gaps, configuration issues, security risks, broken links, and hygiene problems — then generates an evidence-based readiness report with an actionable score and AI-powered recommendations.
-
----
-
-## Demo
-
-> **Live demo:** [ADD YOUR DEPLOYMENT URL]  
-> **Demo video:** [ADD YOUR VIDEO URL]
+ShipCheck AI is an automated pre-submission repository agent that inspects a public GitHub repository, verifies important submission-readiness signals, identifies problems with evidence, prioritizes what needs fixing, and generates an actionable final checklist.
 
 ---
 
-## What it checks
+## Problem
 
-| Category | Weight | What's evaluated |
-|----------|--------|-----------------|
-| README | 30 pts | Presence, length, description, install instructions, usage, tech stack, demo links, code blocks |
-| Build Config | 20 pts | package.json, scripts, lock file, CI/CD, .gitignore |
-| Security | 20 pts | Committed .env files, secret pattern detection, .env.example presence |
-| Links | 10 pts | URL reachability, placeholder link detection |
-| Repo Hygiene | 12 pts | GitHub description, topics, CONTRIBUTING.md, source code presence, activity |
-| License | 8 pts | LICENSE file, SPDX identifier recognition |
+Hackathon builders spend most of their time building features and often discover repository problems only minutes before submission:
 
-**Scoring:** Each category starts at full weight. Every `critical` finding deducts 20 pts, `warning` −8 pts, `info` −2 pts from its category. Final score is 0–100 with grades A–F.
+- Incomplete README
+- Missing setup instructions
+- Undocumented environment variables
+- Broken demo links
+- Missing `.gitignore`
+- Configuration problems
+- Missing build/test information
+- Potentially exposed secrets
+- Poor repository structure
+
+Manual checking is repetitive, time-consuming, and easy to miss. ShipCheck turns this last-minute manual checklist into one automated workflow.
+
+---
+
+## Solution
+
+ShipCheck AI provides a single, excellent workflow:
+
+```
+Paste GitHub Repository
+        ↓
+Validate Repository
+        ↓
+Inspect Repository
+        ↓
+Run Deterministic Checks
+        ↓
+Collect Evidence
+        ↓
+Prioritize Findings
+        ↓
+AI Explains Findings
+        ↓
+Generate Fix Plan
+        ↓
+Re-scan Repository
+        ↓
+Show Improved Readiness
+```
+
+The product is optimized for the question: "If I submit this repository right now, what important things might I have missed?"
+
+---
+
+## Features
+
+### Core Analysis Engine
+
+- **Repository Health Checks** — Verifies repository exists, is public, has README, LICENSE, .gitignore, source structure, and clear project identity
+- **README Analysis** — Detects project overview, problem statement, features, tech stack, installation, environment variables, usage, demo URL, screenshots, and architecture documentation
+- **Configuration Analysis** — Detects project stack (React, Next.js, Node.js, Python, Django, FastAPI, Java, Spring, etc.) and runs relevant checks
+- **Security Pattern Detection** — Scans for API keys, access tokens, passwords, private key markers, and secret environment files (values are redacted)
+- **Link Checking** — Validates URLs, detects placeholders, checks for localhost URLs, verifies demo links where safe
+- **Build & Test Readiness** — Detects test scripts, test configuration, build scripts, testing documentation, and CI configuration
+
+### Scoring System
+
+Transparent score out of 100 with configurable weights:
+
+| Category | Weight |
+|----------|--------|
+| Repository Health | 20 |
+| README Quality | 30 |
+| Configuration | 20 |
+| Security Patterns | 15 |
+| Links | 10 |
+| Testing Readiness | 5 |
+
+**Score Thresholds:**
+- 85–100: Submission Ready
+- 70–84: Needs Attention
+- Below 70: Not Ready
+
+### AI Features
+
+- **Explain Finding** — AI explains what happened, why it matters, how to fix it, and provides example implementations
+- **Generate Fix Plan** — Prioritized action items with explanations and suggested fixes
+- **Submission Summary** — Concise final summary highlighting strong areas and critical issues before submitting
+
+### Re-scan Workflow
+
+After fixing issues, click "Run Scan Again" to see:
+- Previous Score → Current Score
+- Improvement delta
+- Updated findings
+
+This creates a powerful Before → Fix → After demonstration.
+
+### Export Options
+
+- Export as JSON
+- Export as Markdown
+- Print Report
 
 ---
 
 ## Architecture
 
-```
-User → React Frontend (Vite)
-     → Express Backend
-       → GitHub REST API
-       → Deterministic Rule Engine (6 checker modules)
-       → Scoring Engine (weighted 0–100)
-       → AI Recommendation Layer (OpenAI gpt-4o-mini, with fallback)
-     ← ReadinessReport
+```mermaid
+graph TB
+    User[User] --> Frontend[React Frontend]
+    Frontend --> Backend[Express Backend]
+    Backend --> GitHub[GitHub REST API]
+    Backend --> Engine[Deterministic Rule Engine]
+    Engine --> Checkers[6 Checker Modules]
+    Engine --> Scorer[Scoring Engine]
+    Backend --> AI[AI Layer - OpenAI]
+    Backend --> Response[ReadinessReport]
+    Response --> Frontend
+    Frontend --> User
+
+    Checkers --> Readme[README Checker]
+    Checkers --> Config[Config Checker]
+    Checkers --> Security[Security Checker]
+    Checkers --> Links[Links Checker]
+    Checkers --> Hygiene[Repo Hygiene Checker]
+    Checkers --> License[License Checker]
 ```
 
 The AI layer explains and prioritizes findings from the rule engine — it never invents issues. When no OpenAI key is configured, a deterministic fallback still generates useful recommendations.
@@ -56,13 +145,10 @@ The AI layer explains and prioritizes findings from the rule engine — it never
 - Node.js + Express + TypeScript
 - Axios (GitHub API client)
 - OpenAI SDK (gpt-4o-mini)
+- Zod (validation)
 
 ### Testing
 - Vitest
-
-### Dev tooling
-- Kiro AI IDE (Specs, Steering, Hooks)
-- npm workspaces
 
 ---
 
@@ -119,6 +205,10 @@ This starts:
 - Frontend on `http://localhost:5173` (with `/api` proxied to the backend)
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Try the Demo
+
+Click "Try demo with sample repository" on the landing page to see ShipCheck in action with a pre-configured demo repository containing realistic issues.
 
 ### Run tests
 
@@ -197,42 +287,93 @@ Returns `{ "status": "ok" }`.
 ├── frontend/
 │   ├── src/
 │   │   ├── components/          # React UI components
+│   │   ├── utils/
 │   │   ├── App.tsx
 │   │   ├── api.ts
 │   │   └── types.ts
 │   └── package.json
-├── .kiro/
-│   ├── steering/project.md      # Kiro project guidelines
-│   └── hooks/                   # Automated checks on save/task completion
 └── package.json                 # Root workspace
 ```
 
 ---
 
-## How we used Kiro
-
-This project was built entirely inside [Kiro AI IDE](https://kiro.dev).
-
-- **Kiro Specs** — Structured the project into requirements → design → implementation tasks, then executed each task in order.
-- **Kiro Steering** (`.kiro/steering/project.md`) — Maintained persistent coding standards, architecture decisions, and scoring weights throughout all sessions.
-- **Kiro Hooks** — Automated `tsc --noEmit` type-checking after every TypeScript file save, and ran the Vitest test suite after each completed spec task.
-- **Kiro Autopilot** — Used throughout to scaffold, implement, debug, and verify the full stack end-to-end.
-
----
-
-## Security notes
+## Security Considerations
 
 - ShipCheck AI only analyzes **public** repositories. Private repo requests are rejected with HTTP 422.
 - Secret detection is a best-effort surface scan using regex patterns. It is not a substitute for dedicated tools like `gitleaks` or `truffleHog`.
 - No full file contents are sent to OpenAI — only finding summaries and repository metadata.
+- Secret values are always redacted in reports.
+- No arbitrary repository code is executed automatically.
+- This is not a full security audit — it's a submission-readiness check.
 
 ---
 
-## Builder
+## Limitations
 
-- **Name:** Tanya Garg
+- Only public GitHub repositories are supported
+- Link checking has timeouts and may not verify all URLs
+- Secret detection is pattern-based and may have false positives/negatives
+- AI recommendations are based on available evidence and may not cover all edge cases
+- Build/test checks inspect configuration but do not execute arbitrary code
+
+---
+
+## Demo Story
+
+The WCC Launchpad demo tells a simple story:
+
+**Scene 1 — The Problem**
+Show a project repository that looks functional but has several submission gaps. "Most hackathon builders focus on making the product work. The repository is often the last thing they check."
+
+**Scene 2 — ShipCheck**
+Paste the repository URL. Click "Analyze Repository".
+
+**Scene 3 — Agent Workflow**
+Show the agent inspecting repository, README, configuration, links, security patterns, and testing readiness.
+
+**Scene 4 — Findings**
+Show 72/100 Needs Attention with 5 issues found. Open the highest-priority issue.
+
+**Scene 5 — AI Explanation**
+Click "Explain with AI" to see the explanation and fix.
+
+**Scene 6 — Fix**
+Fix the repository issue.
+
+**Scene 7 — Re-scan**
+Click "Run Scan Again". Show 72 → 91 (+19 improvement).
+
+**Scene 8 — Final Result**
+Show SUBMISSION READY. End with: "ShipCheck AI doesn't build your project. It makes sure your project is ready to be judged."
+
+---
+
+## Differentiation
+
+ShipCheck AI is positioned as an automated final reviewer for hackathon submissions, not just a generic GitHub analyzer:
+
+**Generic GitHub Analyzer:**
+- Repository information
+- Basic stats
+- Simple checks
+
+**ShipCheck AI:**
+- Submission readiness focus
+- Evidence-based findings
+- Prioritized fixes
+- AI explanation
+- Re-scan workflow
+- Ready / Not Ready assessment
+
+The product optimizes for the question: "If I submit this repository right now, what important things might I have missed?"
+
+---
+
+## Hackathon Information
+
+- **Challenge:** WCC Launchpad 30 Hackathon — Agentic AI track
 - **Track:** Developer Tools / AI & Productivity
-- **Challenge:** [Kiro Build Challenge](https://awssbggeu.com/challenges/kiro-build-challenge) — AWS Student Builder Group GEU × AWS Student Builder Group PIET
+- **Built for:** Hackathon builders, student developers, open-source contributors, and small development teams
 
 ---
 

@@ -1,10 +1,11 @@
 import { FormEvent, useState } from 'react';
-import { Github, Search, Loader2, AlertCircle } from 'lucide-react';
+import { Github, Loader2, AlertCircle, Play, ArrowRight } from 'lucide-react';
 
 interface UrlInputProps {
   onSubmit: (url: string) => void;
   isLoading: boolean;
   error?: string | null;
+  onDemo?: () => void;
 }
 
 const EXAMPLE_REPOS = [
@@ -13,7 +14,7 @@ const EXAMPLE_REPOS = [
   'https://github.com/vercel/next.js',
 ];
 
-export function UrlInput({ onSubmit, isLoading, error }: UrlInputProps) {
+export function UrlInput({ onSubmit, isLoading, error, onDemo }: UrlInputProps) {
   const [url, setUrl] = useState('');
   const [validationError, setValidationError] = useState('');
 
@@ -46,7 +47,7 @@ export function UrlInput({ onSubmit, isLoading, error }: UrlInputProps) {
       <form onSubmit={handleSubmit} noValidate>
         <div className="relative flex items-center">
           <Github
-            className="absolute left-4 w-5 h-5 text-slate-400 pointer-events-none"
+            className="absolute left-4 w-5 h-5 text-slate-500 pointer-events-none"
             aria-hidden="true"
           />
           <input
@@ -56,13 +57,13 @@ export function UrlInput({ onSubmit, isLoading, error }: UrlInputProps) {
               setUrl(e.target.value);
               if (validationError) setValidationError('');
             }}
-            placeholder="https://github.com/owner/repository"
+            placeholder="https://github.com/username/project"
             className="
-              w-full pl-11 pr-32 py-3.5 rounded-xl
-              bg-slate-900 border border-slate-700
-              text-slate-100 placeholder-slate-500
-              focus:border-brand-500 focus:ring-1 focus:ring-brand-500
-              transition-colors text-sm
+              w-full pl-11 pr-40 py-4 rounded-xl
+              glass-card
+              text-slate-100 placeholder-slate-500 text-mono text-sm
+              focus:border-slate-500 focus:ring-1 focus:ring-slate-500
+              transition-all duration-200
             "
             disabled={isLoading}
             aria-label="GitHub repository URL"
@@ -76,23 +77,22 @@ export function UrlInput({ onSubmit, isLoading, error }: UrlInputProps) {
             disabled={isLoading || !url.trim()}
             className="
               absolute right-2 flex items-center gap-2
-              px-4 py-2 rounded-lg
-              bg-brand-500 hover:bg-brand-600
+              px-5 py-2.5 rounded-lg
+              btn-primary
               disabled:opacity-50 disabled:cursor-not-allowed
-              text-white font-medium text-sm
-              transition-colors
+              font-medium text-sm
             "
             aria-busy={isLoading}
           >
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-                <span>Analyzing…</span>
+                <span>Scanning…</span>
               </>
             ) : (
               <>
-                <Search className="w-4 h-4" aria-hidden="true" />
-                <span>Analyze</span>
+                <span>RUN SHIP CHECK</span>
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </>
             )}
           </button>
@@ -102,7 +102,7 @@ export function UrlInput({ onSubmit, isLoading, error }: UrlInputProps) {
           <p
             id="url-error"
             role="alert"
-            className="mt-2 flex items-center gap-2 text-sm text-red-400"
+            className="mt-3 flex items-center gap-2 text-sm text-red-400 glass-card px-4 py-2 rounded-lg"
           >
             <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
             {displayError}
@@ -111,7 +111,7 @@ export function UrlInput({ onSubmit, isLoading, error }: UrlInputProps) {
       </form>
 
       {/* Example repos */}
-      <div className="mt-3 flex flex-wrap gap-2" aria-label="Example repositories">
+      <div className="mt-4 flex flex-wrap gap-2" aria-label="Example repositories">
         <span className="text-xs text-slate-500 self-center">Try:</span>
         {EXAMPLE_REPOS.map((repo) => {
           const label = repo.replace('https://github.com/', '');
@@ -124,10 +124,10 @@ export function UrlInput({ onSubmit, isLoading, error }: UrlInputProps) {
                 setValidationError('');
               }}
               className="
-                text-xs px-2.5 py-1 rounded-full
-                border border-slate-700 text-slate-400
-                hover:border-brand-500 hover:text-brand-400
-                transition-colors
+                text-xs px-3 py-1.5 rounded-lg
+                glass-card text-slate-400 text-mono
+                hover:border-slate-500 hover:text-slate-200
+                transition-all duration-200
               "
             >
               {label}
@@ -135,6 +135,20 @@ export function UrlInput({ onSubmit, isLoading, error }: UrlInputProps) {
           );
         })}
       </div>
+
+      {/* Demo button */}
+      {onDemo && (
+        <div className="mt-4 text-center">
+          <button
+            type="button"
+            onClick={onDemo}
+            className="flex items-center gap-2 text-xs text-slate-500 hover:text-slate-300 transition-colors mx-auto"
+          >
+            <Play className="w-3 h-3" />
+            Try demo with sample repository
+          </button>
+        </div>
+      )}
     </div>
   );
 }

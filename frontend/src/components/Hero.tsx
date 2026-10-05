@@ -1,46 +1,30 @@
-import { CheckCircle2, Shield, Link, FileText, Package, Star } from 'lucide-react';
-
-const FEATURES = [
-  { icon: FileText, label: 'README analysis' },
-  { icon: Package,  label: 'Build config' },
-  { icon: Shield,   label: 'Security scan' },
-  { icon: Link,     label: 'Link validation' },
-  { icon: Star,     label: 'Repo hygiene' },
-  { icon: CheckCircle2, label: 'License check' },
-];
-
 export function Hero() {
   return (
-    <div className="text-center py-10">
-      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-xs text-brand-400 mb-4">
-        <span className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" aria-hidden="true" />
-        Built for the Kiro Build Challenge
+    <div className="text-center py-12 sm:py-16 relative">
+      {/* Status indicator */}
+      <div className="inline-flex items-center gap-2 text-label text-slate-400 mb-8">
+        <span className="status-dot online" aria-hidden="true" />
+        REPOSITORY INSPECTION SYSTEM ONLINE
       </div>
 
-      <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-3">
-        Is your repo{' '}
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-blue-400">
-          submission-ready?
-        </span>
+      <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight mb-4 leading-tight max-w-4xl mx-auto">
+        SHIPCHECK AI
       </h1>
-      <p className="text-base text-slate-400 max-w-lg mx-auto mb-8">
-        ShipCheck AI scans public GitHub repositories for documentation gaps, security risks,
-        and hygiene issues — then gives you an evidence-based readiness score.
+      <p className="text-xl sm:text-2xl text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed px-4">
+        Your final reviewer before you hit Submit.
+      </p>
+      <p className="text-sm text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed px-4">
+        Inspect your repository. Find what reviewers will notice. Fix it before they do.
       </p>
 
-      <div
-        className="flex flex-wrap justify-center gap-3"
-        aria-label="Checks performed"
-      >
-        {FEATURES.map(({ icon: Icon, label }) => (
-          <div
-            key={label}
-            className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full"
-          >
-            <Icon className="w-3.5 h-3.5 text-brand-400" aria-hidden="true" />
-            {label}
-          </div>
-        ))}
+      {/* Capability labels */}
+      <div className="flex flex-wrap justify-center gap-3 text-label text-slate-500 mb-8 px-4">
+        <span className="px-3 py-1.5 rounded-lg glass-card">README</span>
+        <span className="px-3 py-1.5 rounded-lg glass-card">CONFIG</span>
+        <span className="px-3 py-1.5 rounded-lg glass-card">SECURITY</span>
+        <span className="px-3 py-1.5 rounded-lg glass-card">LINKS</span>
+        <span className="px-3 py-1.5 rounded-lg glass-card">TESTING</span>
+        <span className="px-3 py-1.5 rounded-lg glass-card">REPO HEALTH</span>
       </div>
     </div>
   );

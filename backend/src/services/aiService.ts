@@ -16,12 +16,16 @@ let _client: OpenAI | null = null;
 function getClient(): OpenAI | null {
   if (!process.env.OPENAI_API_KEY) return null;
   if (!_client) {
-    _client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    _client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      // Featherless (or any OpenAI-compatible provider) base URL
+      baseURL: process.env.OPENAI_BASE_URL ?? undefined,
+    });
   }
   return _client;
 }
 
-const MODEL = process.env.OPENAI_MODEL ?? 'gpt-4o-mini';
+const MODEL = process.env.OPENAI_MODEL ?? 'meta-llama/Llama-3.3-70B-Instruct';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -106,11 +110,14 @@ Include at most the top 8 prioritized fixes. Return only the JSON, no markdown f
       ],
       temperature: 0.4,
       max_tokens: 1200,
-      response_format: { type: 'json_object' },
     });
 
     const raw = response.choices[0]?.message?.content ?? '{}';
-    const parsed = JSON.parse(raw) as {
+
+    // Strip markdown fences if model wrapped the JSON
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+
+    const parsed = JSON.parse(cleaned) as {
       summary?: string;
       prioritized?: PrioritizedFix[];
       overallAdvice?: string;

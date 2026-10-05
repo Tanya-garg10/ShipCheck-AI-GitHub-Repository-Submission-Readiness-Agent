@@ -15,9 +15,9 @@ function MetaStat({
   value: string | number;
 }) {
   return (
-    <div className="flex items-center gap-1.5 text-sm text-slate-400" aria-label={`${label}: ${value}`}>
-      <Icon className="w-3.5 h-3.5" aria-hidden="true" />
-      <span className="tabular-nums">{value}</span>
+    <div className="flex items-center gap-1.5 text-sm text-slate-400 glass-card px-3 py-1.5 rounded-lg" aria-label={`${label}: ${value}`}>
+      <Icon className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
+      <span className="text-mono tabular-nums">{value}</span>
     </div>
   );
 }
@@ -28,14 +28,14 @@ export function RepoMetaCard({ metadata }: RepoMetaCardProps) {
   });
 
   return (
-    <div className="rounded-2xl bg-slate-900 border border-slate-800 p-4 animate-slide-up">
+    <div className="rounded-xl glass-card p-4 animate-slide-up">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
           <a
             href={`https://github.com/${metadata.fullName}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-base font-semibold text-white hover:text-brand-400 transition-colors"
+            className="text-base font-semibold text-white hover:text-slate-300 transition-colors text-mono"
           >
             {metadata.fullName}
           </a>
@@ -63,7 +63,7 @@ export function RepoMetaCard({ metadata }: RepoMetaCardProps) {
           {metadata.topics.map((t) => (
             <span
               key={t}
-              className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700"
+              className="text-xs px-2.5 py-1 rounded-lg glass-card text-slate-400"
             >
               {t}
             </span>
