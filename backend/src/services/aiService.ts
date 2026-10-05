@@ -14,17 +14,19 @@ import {
 let _client: OpenAI | null = null;
 
 function getClient(): OpenAI | null {
-  if (!process.env.FEATHERLESS_API_KEY) return null;
+  // Support both OPENAI_API_KEY and FEATHERLESS_API_KEY env var names
+  const apiKey = process.env.OPENAI_API_KEY ?? process.env.FEATHERLESS_API_KEY;
+  if (!apiKey) return null;
   if (!_client) {
     _client = new OpenAI({
-      apiKey: process.env.FEATHERLESS_API_KEY,
-      baseURL: process.env.FEATHERLESS_BASE_URL ?? 'https://api.featherless.ai/v1',
+      apiKey,
+      baseURL: process.env.OPENAI_BASE_URL ?? process.env.FEATHERLESS_BASE_URL ?? 'https://api.featherless.ai/v1',
     });
   }
   return _client;
 }
 
-const MODEL = process.env.FEATHERLESS_MODEL ?? 'meta-llama/Llama-3.3-70B-Instruct';
+const MODEL = process.env.OPENAI_MODEL ?? process.env.FEATHERLESS_MODEL ?? 'unsloth/Llama-3.3-70B-Instruct';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

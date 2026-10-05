@@ -30,11 +30,11 @@ fixSuggestionRouter.post('/', async (req: Request, res: Response) => {
 
   // ── Check that AI key is configured ────────────────────────────────────────
 
-  if (!process.env.FEATHERLESS_API_KEY) {
+  const hasAIKey = !!(process.env.OPENAI_API_KEY ?? process.env.FEATHERLESS_API_KEY);
+  if (!hasAIKey) {
     return res.status(503).json({
       success: false,
-      error:
-        'AI fix suggestions require a Featherless AI API key. Set FEATHERLESS_API_KEY in the backend .env file.',
+      error: 'AI fix suggestions require an API key. Set OPENAI_API_KEY in the backend .env file.',
     } as FixSuggestionResponse);
   }
 
