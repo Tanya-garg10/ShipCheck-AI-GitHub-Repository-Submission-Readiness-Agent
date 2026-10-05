@@ -4,6 +4,8 @@
 
 ShipCheck AI is an automated pre-submission repository agent that inspects a public GitHub repository, verifies important submission-readiness signals, identifies problems with evidence, prioritizes what needs fixing, and generates an actionable final checklist.
 
+## What it checks
+
 ---
 
 ## Problem
@@ -104,8 +106,6 @@ This creates a powerful Before → Fix → After demonstration.
 - Export as Markdown
 - Print Report
 
----
-
 ## Architecture
 
 ```mermaid
@@ -131,8 +131,6 @@ graph TB
 
 The AI layer explains and prioritizes findings from the rule engine — it never invents issues. When no OpenAI key is configured, a deterministic fallback still generates useful recommendations.
 
----
-
 ## Tech Stack
 
 ### Frontend
@@ -151,6 +149,10 @@ The AI layer explains and prioritizes findings from the rule engine — it never
 - Vitest
 
 ---
+
+### Dev tooling
+- Kiro AI IDE (Specs, Steering, Hooks)
+- npm workspaces
 
 ## Getting Started
 
@@ -224,8 +226,6 @@ npm run build
 
 Output: `backend/dist/` and `frontend/dist/`.
 
----
-
 ## API Reference
 
 ### `POST /api/analyze`
@@ -261,8 +261,6 @@ Returns a detailed AI-generated fix for a specific finding.
 
 Returns `{ "status": "ok" }`.
 
----
-
 ## Project Structure
 
 ```
@@ -297,6 +295,19 @@ Returns `{ "status": "ok" }`.
 
 ---
 
+## How I used Kiro
+
+This project was built entirely inside [Kiro AI IDE](https://kiro.dev).
+
+- **Kiro Specs** — Structured the project into requirements → design → implementation tasks, then executed each task in order.
+- **Kiro Steering** (`.kiro/steering/project.md`) — Maintained persistent coding standards, architecture decisions, and scoring weights throughout all sessions.
+- **Kiro Hooks** — Automated `tsc --noEmit` type-checking after every TypeScript file save, and ran the Vitest test suite after each completed spec task.
+- **Kiro Autopilot** — Used throughout to scaffold, implement, debug, and verify the full stack end-to-end.
+
+## Security notes
+
+---
+
 ## Security Considerations
 
 - ShipCheck AI only analyzes **public** repositories. Private repo requests are rejected with HTTP 422.
@@ -309,6 +320,8 @@ Returns `{ "status": "ok" }`.
 ---
 
 ## Limitations
+
+## Builder
 
 - Only public GitHub repositories are supported
 - Link checking has timeouts and may not verify all URLs
@@ -374,8 +387,6 @@ The product optimizes for the question: "If I submit this repository right now, 
 - **Challenge:** WCC Launchpad 30 Hackathon — Agentic AI track
 - **Track:** Developer Tools / AI & Productivity
 - **Built for:** Hackathon builders, student developers, open-source contributors, and small development teams
-
----
 
 ## License
 
